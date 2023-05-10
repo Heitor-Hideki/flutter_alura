@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_alura/data/task_dao.dart';
 import 'difficulty.dart';
 
 class Task extends StatefulWidget {
@@ -6,10 +7,10 @@ class Task extends StatefulWidget {
   final String photo;
   final int difficulty;
 
-  Task(this.nome, this.photo, this.difficulty, {Key? key})
-      : super(key: key);
+  Task(this.nome, this.photo, this.difficulty, {Key? key}) : super(key: key);
 
   int level = 0;
+
   @override
   State<Task> createState() => _TaskState();
 }
@@ -18,7 +19,7 @@ class _TaskState extends State<Task> {
   int mastery = 0;
 
   bool assetOrNetwork() {
-    if(widget.photo.contains('http')){
+    if (widget.photo.contains('http')) {
       return false;
     }
     return true;
@@ -36,9 +37,8 @@ class _TaskState extends State<Task> {
                 color: mastery == 0
                     ? Colors.deepPurple
                     : mastery == 1
-                      ? Colors.blue
-                      : Colors.red
-            ),
+                        ? Colors.blue
+                        : Colors.red),
             height: 140,
           ),
           Column(
@@ -60,13 +60,15 @@ class _TaskState extends State<Task> {
                       height: 100,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(4),
-                        child: assetOrNetwork() ? Image.asset(
-                          widget.photo,
-                          fit: BoxFit.cover,
-                        ) : Image.network(
-                          widget.photo,
-                          fit: BoxFit.cover,
-                        ),
+                        child: assetOrNetwork()
+                            ? Image.asset(
+                                widget.photo,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.network(
+                                widget.photo,
+                                fit: BoxFit.cover,
+                              ),
                       ),
                     ),
                     Column(
@@ -92,6 +94,9 @@ class _TaskState extends State<Task> {
                         height: 52,
                         width: 52,
                         child: ElevatedButton(
+                            onLongPress: () {
+                              TaskDao().deleteByName(widget.nome);
+                            },
                             onPressed: () {
                               setState(() {
                                 widget.level++;
